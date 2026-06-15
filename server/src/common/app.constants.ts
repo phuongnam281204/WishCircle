@@ -1,0 +1,9 @@
+export const APP_TIMEZONE = 'Asia/Ho_Chi_Minh' as const;
+export const BIRTHDAY_PAGE_TTL_DAYS = 7;
+export const OTP_TTL_MINUTES = 5;
+export const MOCK_OTP_CODE = '123456' as const;
+export const INVITE_CODE_LENGTH = 8;
+export const TOKEN_BYTE_LENGTH = 32;
+export const REQUEST_BODY_LIMIT = '8mb' as const;
+export const MORNING_REMINDER_CRON = '0 7 * * *' as const;
+export const BIRTHDAY_DELIVERY_CRON = '0 8 * * *' as const;
