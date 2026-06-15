@@ -1,0 +1,16 @@
+{
+  "name": "wishcircle",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "server:dev": "npm run dev --workspace server",
+    "server:build": "npm run build --workspace server",
+    "client:dev": "npm run dev --workspace client",
+    "client:build": "npm run build --workspace client",
+    "build": "npm run server:build && npm run client:build"
+  }
+}
