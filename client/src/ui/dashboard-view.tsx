@@ -65,11 +65,32 @@ export function DashboardView(): ReactElement {
     }
   };
   const upcomingBirthdays = getUpcomingBirthdays(groups).slice(0, 4);
+  const totalMembers = groups.reduce((total, group) => total + group.members.length, 0);
   return (
     <section className="page-stack">
-      <header className="page-hero">
-        <h1 className="page-heading">Welcome back, {user?.name ?? user?.phone ?? 'friend'}!</h1>
-        <p className="page-subtitle">Let's celebrate the people you love.</p>
+      <header className="page-hero dashboard-hero">
+        <div>
+          <span className="eyebrow">WishCircle dashboard</span>
+          <h1 className="page-heading">Welcome back, {user?.name ?? user?.phone ?? 'friend'}!</h1>
+          <p className="page-subtitle">Keep birthdays, wishes, and shared memories moving in one warm little command center.</p>
+        </div>
+        <div className="hero-stat-grid" aria-label="Dashboard summary">
+          <article className="hero-stat">
+            <span className="material-symbols-outlined">groups</span>
+            <strong>{groups.length}</strong>
+            <small>Groups</small>
+          </article>
+          <article className="hero-stat">
+            <span className="material-symbols-outlined">diversity_3</span>
+            <strong>{totalMembers}</strong>
+            <small>People</small>
+          </article>
+          <article className="hero-stat">
+            <span className="material-symbols-outlined">cake</span>
+            <strong>{upcomingBirthdays.length}</strong>
+            <small>Upcoming</small>
+          </article>
+        </div>
         {message ? <p className="status-message error">{message}</p> : null}
       </header>
       <section className="page-stack">

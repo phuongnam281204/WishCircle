@@ -1,20 +1,45 @@
-import { ReactElement } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { clearToken, getToken } from '../api';
+
+const THEME_STORAGE_KEY = 'wishcircle-theme';
+type AppTheme = 'light' | 'dark';
 
 /** Shared shell for WishCircle pages. */
 export function AppLayout(): ReactElement {
   const navigate = useNavigate();
   const location = useLocation();
+  const [theme, setTheme] = useState<AppTheme>(() => getStoredTheme());
   const hasToken = Boolean(getToken());
   const isAuthRoute = location.pathname === '/login' || location.pathname === '/register';
   const isBirthdayRoute = location.pathname.startsWith('/b/');
+  const toggleTheme = (): void => {
+    setTheme((currentTheme) => currentTheme === 'dark' ? 'light' : 'dark');
+  };
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+  }, [theme]);
   const executeLogout = (): void => {
     clearToken();
     navigate('/login');
   };
   if (isAuthRoute || isBirthdayRoute) {
-    return <Outlet />;
+    return (
+      <>
+        <button
+          aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+          className="theme-toggle floating-theme-toggle"
+          onClick={toggleTheme}
+          title={theme === 'dark' ? 'Light theme' : 'Dark theme'}
+          type="button"
+        >
+          <span className="material-symbols-outlined">{theme === 'dark' ? 'light_mode' : 'dark_mode'}</span>
+        </button>
+        <Outlet />
+      </>
+    );
   }
   return (
     <div className="app-shell">
@@ -28,6 +53,15 @@ export function AppLayout(): ReactElement {
           </nav>
         </div>
         <div className="nav-actions">
+          <button
+            aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+            className="theme-toggle"
+            onClick={toggleTheme}
+            title={theme === 'dark' ? 'Light theme' : 'Dark theme'}
+            type="button"
+          >
+            <span className="material-symbols-outlined">{theme === 'dark' ? 'light_mode' : 'dark_mode'}</span>
+          </button>
           <button aria-label="Notifications" className="icon-button" type="button">
             <span className="material-symbols-outlined">notifications</span>
           </button>
@@ -62,4 +96,12 @@ export function AppLayout(): ReactElement {
       </nav>
     </div>
   );
+}
+
+function getStoredTheme(): AppTheme {
+  const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+  if (storedTheme === 'light' || storedTheme === 'dark') {
+    return storedTheme;
+  }
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
